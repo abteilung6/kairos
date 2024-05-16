@@ -7,6 +7,7 @@ class Config(BaseSettings):
     AWS_SECRET_ACCESS_KEY: SecretStr
     DEFAULT_AWS_REGION: str = "eu-west-1"
     BUCKET_NAME: str
+    SQLALCHEMY_DATABASE_URL: str
 
 
 def get_config() -> Config:

@@ -1,16 +1,16 @@
-from typing import Any, Final
-import cv2
-from cv2.typing import MatLike
-from boto3.session import Session
-import requests
-from requests import Response
 from pathlib import Path
+from typing import Any, Final
 from uuid import uuid4
+
+import cv2
+import requests
+from boto3.session import Session
+from cv2.typing import MatLike
+from loguru import logger
+from requests import Response
 
 from config import get_config
 from exceptions import FileFormatNotSupportedError
-from loguru import logger
-
 
 SAMPLE_IMAGE_FILE_NAME: Final[str] = "image.png"
 ALLOWED_FILE_FORMATS: list[str] = [".png"]
@@ -30,7 +30,7 @@ def generate_object_key(filename: str) -> str:
 
 
 def create_botocore_session(
-    aws_access_key_id: str, aws_secret_access_key: str, region_name: str
+    aws_access_key_id: str, aws_secret_access_key: str, region_name: str,
 ) -> Session:
     return Session(
         aws_access_key_id=aws_access_key_id,
@@ -40,7 +40,7 @@ def create_botocore_session(
 
 
 def create_presigned_post(
-    session: Session, bucket_name: str, key: str
+    session: Session, bucket_name: str, key: str,
 ) -> dict[str, Any]:
     s3 = session.client("s3")
     return s3.generate_presigned_post(bucket_name, key, ExpiresIn=3600)
@@ -49,7 +49,7 @@ def create_presigned_post(
 def create_presigned_get_url(session: Session, bucket_name: str, key: str) -> str:
     s3 = session.client("s3")
     return s3.generate_presigned_url(
-        "get_object", Params={"Bucket": bucket_name, "Key": key}, ExpiresIn=3600
+        "get_object", Params={"Bucket": bucket_name, "Key": key}, ExpiresIn=3600,
     )
 
 
@@ -73,7 +73,7 @@ def get_human_count(image: MatLike) -> int:
     hog = cv2.HOGDescriptor()
     hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
     (humans, _) = hog.detectMultiScale(
-        image, winStride=(10, 10), padding=(32, 32), scale=1.1
+        image, winStride=(10, 10), padding=(32, 32), scale=1.1,
     )
     return len(humans)
 
@@ -89,7 +89,7 @@ if __name__ == "__main__":
 
     object_key = generate_object_key(SAMPLE_IMAGE_FILE_NAME)
     presigned_post_response = create_presigned_post(
-        session=session, bucket_name=bucket_name, key=object_key
+        session=session, bucket_name=bucket_name, key=object_key,
     )
     presigned_post_url = presigned_post_response["url"]
 
@@ -100,7 +100,7 @@ if __name__ == "__main__":
     )
 
     presigned_get_url = create_presigned_get_url(
-        session=session, bucket_name=bucket_name, key=object_key
+        session=session, bucket_name=bucket_name, key=object_key,
     )
     download_file_path = f"images/{object_key}"
     download_file_from_url(presigned_get_url, download_file_path)
