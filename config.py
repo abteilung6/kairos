@@ -8,6 +8,7 @@ class Config(BaseSettings):
     DEFAULT_AWS_REGION: str = "eu-west-1"
     BUCKET_NAME: str
     SQLALCHEMY_DATABASE_URL: str
+    KAIROS_CONSOLE_REMOTE: str | None
 
 
 def get_config() -> Config:

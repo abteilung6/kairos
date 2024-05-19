@@ -63,13 +63,14 @@ def fixture_db_session() -> Generator[DBSession, Any, None]:
 
 @pytest.fixture(name="app")
 def fixture_app(aws_fake_credentials: AWSCredentials, db_session: DBSession) -> tuple[TestClient, AWSCallerMock]:
-    app = get_app(skip_db=True)
+    app = get_app(skip_db=True, skip_cors=True)
     config = Config(
         AWS_ACCESS_KEY_ID=aws_fake_credentials.aws_access_key_id,
         AWS_SECRET_ACCESS_KEY=aws_fake_credentials.aws_secret_access_key.get_secret_value(),
         DEFAULT_AWS_REGION="eu-west-1",
         BUCKET_NAME="fake_bucket",
         SQLALCHEMY_DATABASE_URL=SQLALCHEMY_TEST_DATABASE_URL,
+        KAIROS_CONSOLE_REMOTE="http://127.0.0.1:5173",
     )
     aws_caller_mock = AWSCallerMock(credentials=aws_fake_credentials)
 
