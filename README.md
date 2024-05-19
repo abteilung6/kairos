@@ -39,3 +39,14 @@ Run tests with `pytest`
 See
 
 - [Pytest docs](https://docs.pytest.org/en/7.4.x/)
+
+
+## Generate OpenAPI client
+
+Run under `kairos-console/`
+```
+cd kairos-console
+npm run generate-openapi-client
+```
+
+Get debug level logg with `export JAVA_OPTS="${JAVA_OPTS} -Dlog.level=debug"`
