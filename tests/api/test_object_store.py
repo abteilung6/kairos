@@ -4,6 +4,7 @@ from unittest.mock import MagicMock, Mock
 from botocore.exceptions import ClientError
 from fastapi import status
 from fastapi.testclient import TestClient
+from pydantic import HttpUrl
 from sqlalchemy.orm import Session
 
 from kairos import crud
@@ -22,6 +23,24 @@ FAKE_OBJECT_STORE_RESPONSE = PresignedPostUrlResponse(
         signature="fake-signature",
     ),
 )
+
+def test_object_store_list(
+    app: tuple[TestClient, AWSCallerMock],
+    db_session: Session,
+) -> None:
+    client, _ = app
+    object_store_create = ObjectStoreCreate(object_key="object_key", claimed_time=now(), occupied_time=now(), bucket_get_url=HttpUrl("http://localhost/"))
+    crud.object_store_create(db=db_session, obj=object_store_create) # TODO: fixture, yield with removal
+
+    response = client.get(
+        "/object-store",
+    )
+
+    assert response.status_code == 200
+    content = response.json()
+    assert len(content["object_stores"]) == 1
+    assert content["object_stores"][0]["object_key"] == object_store_create.object_key
+    assert content["object_stores"][0]["bucket_get_url"] == str(object_store_create.bucket_get_url)
 
 
 @dataclass

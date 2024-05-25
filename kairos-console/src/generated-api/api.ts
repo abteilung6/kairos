@@ -154,6 +154,19 @@ export interface ObjectStoreCreateResponse {
 /**
  * 
  * @export
+ * @interface ObjectStoreListResponse
+ */
+export interface ObjectStoreListResponse {
+    /**
+     * 
+     * @type {Array<ObjectStore>}
+     * @memberof ObjectStoreListResponse
+     */
+    'object_stores': Array<ObjectStore>;
+}
+/**
+ * 
+ * @export
  * @enum {string}
  */
 
@@ -288,7 +301,37 @@ export const ObjectStoresApiAxiosParamCreator = function (configuration?: Config
         },
         /**
          * 
-         * @summary Update object store
+         * @summary Return a list of object stores.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        objectStoreListObjectStoreGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/object-store/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Acknowledge that object key was uploaded.
+         * @summary Update object store.
          * @param {string} objectStoreId 
          * @param {ObjectStoreUpdateRequest} objectStoreUpdateRequest 
          * @param {*} [options] Override http request option.
@@ -351,7 +394,19 @@ export const ObjectStoresApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Update object store
+         * @summary Return a list of object stores.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async objectStoreListObjectStoreGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ObjectStoreListResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.objectStoreListObjectStoreGet(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ObjectStoresApi.objectStoreListObjectStoreGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Acknowledge that object key was uploaded.
+         * @summary Update object store.
          * @param {string} objectStoreId 
          * @param {ObjectStoreUpdateRequest} objectStoreUpdateRequest 
          * @param {*} [options] Override http request option.
@@ -385,7 +440,16 @@ export const ObjectStoresApiFactory = function (configuration?: Configuration, b
         },
         /**
          * 
-         * @summary Update object store
+         * @summary Return a list of object stores.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        objectStoreListObjectStoreGet(options?: any): AxiosPromise<ObjectStoreListResponse> {
+            return localVarFp.objectStoreListObjectStoreGet(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Acknowledge that object key was uploaded.
+         * @summary Update object store.
          * @param {string} objectStoreId 
          * @param {ObjectStoreUpdateRequest} objectStoreUpdateRequest 
          * @param {*} [options] Override http request option.
@@ -415,7 +479,16 @@ export interface ObjectStoresApiInterface {
 
     /**
      * 
-     * @summary Update object store
+     * @summary Return a list of object stores.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ObjectStoresApiInterface
+     */
+    objectStoreListObjectStoreGet(options?: RawAxiosRequestConfig): AxiosPromise<ObjectStoreListResponse>;
+
+    /**
+     * Acknowledge that object key was uploaded.
+     * @summary Update object store.
      * @param {string} objectStoreId 
      * @param {ObjectStoreUpdateRequest} objectStoreUpdateRequest 
      * @param {*} [options] Override http request option.
@@ -447,7 +520,18 @@ export class ObjectStoresApi extends BaseAPI implements ObjectStoresApiInterface
 
     /**
      * 
-     * @summary Update object store
+     * @summary Return a list of object stores.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ObjectStoresApi
+     */
+    public objectStoreListObjectStoreGet(options?: RawAxiosRequestConfig) {
+        return ObjectStoresApiFp(this.configuration).objectStoreListObjectStoreGet(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Acknowledge that object key was uploaded.
+     * @summary Update object store.
      * @param {string} objectStoreId 
      * @param {ObjectStoreUpdateRequest} objectStoreUpdateRequest 
      * @param {*} [options] Override http request option.

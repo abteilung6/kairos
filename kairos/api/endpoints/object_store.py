@@ -13,6 +13,7 @@ from kairos.schemas.object_store import (
     ObjectStore,
     ObjectStoreCreateRequest,
     ObjectStoreCreateResponse,
+    ObjectStoreListResponse,
     ObjectStoreState,
     ObjectStoreUpdateRequest,
 )
@@ -21,13 +22,27 @@ from kairos.utils.date import now
 router = APIRouter()
 
 
+@router.get(
+    "/",
+    response_model=ObjectStoreListResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Return a list of object stores.",
+    response_description="List of objects stores.",
+)
+def object_store_list(
+    db: Session = Depends(get_db),
+) -> ObjectStoreListResponse:
+    object_stores = crud.object_store_list(db=db)
+    return ObjectStoreListResponse(object_stores=object_stores)
+
+
 @router.post(
     "/",
     response_model=ObjectStoreCreateResponse,
     status_code=status.HTTP_200_OK,
     summary="Generate a presigned url for object storage.",
     description="Generate a presigned url in order to upload your file to object store.",
-    response_description="Retrieves the generated presigned url.",
+    response_description="Object meta data including the generated presigned url.",
 )
 def object_store_create(
     request: ObjectStoreCreateRequest,
@@ -73,9 +88,8 @@ def object_store_create(
     "/{object_store_id}",
     response_model=ObjectStore,
     status_code=status.HTTP_200_OK,
-    summary="Update object store",
-    description="",
-    response_description="",
+    summary="Update object store.",
+    description="Acknowledge that object key was uploaded.",
 )
 def object_store_update(
     object_store_id: UUID,

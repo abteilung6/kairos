@@ -57,3 +57,9 @@ class ObjectStoreCreateResponse(ObjectStore):
         description="Using a presigned URL will allow an upload without requiring another party to have AWS security credentials or permissions.",  # noqa: E501
     )
     fields: PresignedFields  # only exposed during creation
+
+
+class ObjectStoreListResponse(BaseModel):
+    object_stores: list[ObjectStore] = Field(
+        title="List of object stores",
+    )

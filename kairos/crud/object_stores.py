@@ -7,6 +7,10 @@ from kairos import models, schemas
 from kairos.crud.exceptions import EntityNotFoundError
 
 
+def object_store_list(db: Session) -> list[models.ObjectStore]:
+    return db.query(models.ObjectStore).filter(models.ObjectStore.occupied_time.is_not(None)).all()
+
+
 def object_store_create(db: Session, obj: schemas.ObjectStoreCreate) -> models.ObjectStore:
     db_object_store = models.ObjectStore(
         id=uuid4(),
