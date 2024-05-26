@@ -1,10 +1,13 @@
 import { useS3FileUpload } from 'hooks/useS3FileUpload'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { noop } from 'utils'
+import { Routes } from 'utils/routes'
 
 const AppPage: React.FC = () => {
   const { uploadFile, isLoading, isError, error } = useS3FileUpload()
   const [file, setFile] = useState<File | undefined>()
+  const navigate = useNavigate()
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault()
@@ -14,6 +17,7 @@ const AppPage: React.FC = () => {
     uploadFile(file)
       .then(() => {
         setFile(undefined)
+        navigate(Routes.OBJECT_STORE_LIST_PAGE)
       })
       .catch(noop)
   }
@@ -24,7 +28,7 @@ const AppPage: React.FC = () => {
 
   return (
     <div>
-      <h1 className="text-gray-600">AppPage</h1>
+      <h1>ObjectStoreCreatePage</h1>
       {isError && <div>{error?.message}</div>}
       {file && `File: ${file.name}`}
       <form onSubmit={onSubmit}>

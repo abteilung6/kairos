@@ -1,6 +1,6 @@
 import { screen, fireEvent, waitFor } from '@testing-library/react'
 
-import AppPage from './AppPage'
+import ObjectStoreCreatePage from './ObjectStoreCreatePage'
 import api from 'api/api'
 import {
   createMockObjectStore,
@@ -20,10 +20,10 @@ const mockFile = createMockFile({
   content: mockContent
 })
 
-describe(AppPage.name, () => {
+describe(ObjectStoreCreatePage.name, () => {
   beforeEach(() => {
     vi.resetAllMocks()
-    customRender(<AppPage />)
+    customRender(<ObjectStoreCreatePage />)
   })
 
   const selectInputFile = () => {
@@ -38,7 +38,7 @@ describe(AppPage.name, () => {
     it('should render the header AppPage', () => {
       expect(
         screen.getByRole('heading', {
-          name: 'AppPage'
+          name: 'ObjectStoreCreatePage'
         })
       ).toBeInTheDocument()
     })

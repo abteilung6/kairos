@@ -1,4 +1,9 @@
-import { UseMutationOptions, useMutation } from '@tanstack/react-query'
+import {
+  UseMutationOptions,
+  UseQueryOptions,
+  useMutation,
+  useQuery
+} from '@tanstack/react-query'
 import {
   ObjectStore,
   ObjectStoreCreateRequest,
@@ -6,6 +11,19 @@ import {
   ObjectStoreUpdateRequest
 } from 'generated-api'
 import api from './api'
+
+export const useObjectStoreListQuery = (
+  options?: Omit<UseQueryOptions<ObjectStore[]>, 'queryKey' | 'queryFn'>
+) => {
+  return useQuery<ObjectStore[], Error>({
+    ...options,
+    queryKey: ['object_stores'],
+    queryFn: async () => {
+      const { data } = await api.ObjectStores.objectStoreListObjectStoreGet()
+      return data.object_stores
+    }
+  })
+}
 
 export const useCreateObjectStore = (
   options?: Omit<
